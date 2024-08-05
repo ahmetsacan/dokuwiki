@@ -493,7 +493,7 @@ function pathID($path, $keeptxt = false)
  * recmatch   string  match directory against this regexp when recursing     (default: '', so accept everything)
  * showmsg    bool    warn about non-ID files                                (default: false)
  * showhidden bool    show hidden files(e.g. by hidepages config) too        (default: false)
-     * firsthead  bool    return first heading for pages                         (default: false)
+ * firsthead  bool    return first heading for pages                         (default: false)
  *
  * @param array &$data  - Reference to the result data structure
  * @param string $base  - Base usually $conf['datadir']
