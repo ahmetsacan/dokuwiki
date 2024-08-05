@@ -34,14 +34,14 @@ class ActionTest extends \DokuWikiTest
             array('Admin', AUTH_READ, array('exists' => true, 'ismanager' => true)), // let in, check later again
 
             array('Check', AUTH_READ, array('exists' => true, 'ismanager' => false)), // sensible?
-            array('Diff', AUTH_READ, array('exists' => true, 'ismanager' => false)),
+            array('Diff', AUTH_HISTORY, array('exists' => true, 'ismanager' => false)),
             array('Show', AUTH_READ, array('exists' => true, 'ismanager' => false)),
             array('Subscribe', AUTH_READ, array('exists' => true, 'ismanager' => false)),
             array('Locked', AUTH_READ, array('exists' => true, 'ismanager' => false)),
-            array('Source', AUTH_READ, array('exists' => true, 'ismanager' => false)),
+            array('Source', AUTH_SOURCE, array('exists' => true, 'ismanager' => false)),
             array('Export', AUTH_READ, array('exists' => true, 'ismanager' => false)),
             array('Media', AUTH_READ, array('exists' => true, 'ismanager' => false)),
-            array('Revisions', AUTH_READ, array('exists' => true, 'ismanager' => false)),
+            array('Revisions', AUTH_HISTORY, array('exists' => true, 'ismanager' => false)),
 
             array('Draftdel', AUTH_EDIT, array('exists' => true, 'ismanager' => false)),
 

@@ -102,6 +102,12 @@ class auth_acl_test extends DokuWikiTest {
             'devel:funstuff        bigboss     0',
             'devel:*               @marketing  1',
             'devel:marketing       @marketing  2',
+            'unlisted:*            @ALL        1',
+            'unlisted:*            canlist     '.AUTH_EXPOSE,
+            'hiddenhistory:*       @ALL        '.AUTH_READ,
+            'hiddenhistory:*       historian   '.AUTH_HISTORY,
+            'hiddensource:*        @ALL        '.AUTH_READ,
+            'hiddensource:*        sourcerer   '.AUTH_SOURCE,
         );
 
 
@@ -135,6 +141,13 @@ class auth_acl_test extends DokuWikiTest {
         $this->assertEquals(auth_aclcheck('devel:marketing', 'bigboss' ,array('foo'))       , AUTH_DELETE);
         $this->assertEquals(auth_aclcheck('devel:marketing', 'jill'    ,array('marketing')) , AUTH_EDIT);
         $this->assertEquals(auth_aclcheck('devel:marketing', 'jane'    ,array('devel'))     , AUTH_UPLOAD);
+
+        $this->assertEquals(auth_aclcheck('unlisted:page', ''              ,array())            , AUTH_READ);
+        $this->assertEquals(auth_aclcheck('unlisted:page', 'canlist'       ,array())            , AUTH_EXPOSE);
+        $this->assertEquals(auth_aclcheck('hiddenhistory:page', ''         ,array())            , AUTH_READ);
+        $this->assertEquals(auth_aclcheck('hiddenhistory:page', 'historian',array())            , AUTH_HISTORY);
+        $this->assertEquals(auth_aclcheck('hiddensource:page', ''         ,array())            , AUTH_READ);
+        $this->assertEquals(auth_aclcheck('hiddensource:page', 'sourcerer',array())            , AUTH_SOURCE);
 
     }
 
