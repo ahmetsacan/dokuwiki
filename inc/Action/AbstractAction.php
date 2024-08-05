@@ -39,7 +39,7 @@ abstract class AbstractAction
      * the current user and page after checkPermissions() ran through. If it fails,
      * the user will be shown the Denied action.
      *
-     * @return int
+     * @return float
      */
     abstract public function minimumPermission();
 

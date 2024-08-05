@@ -703,7 +703,7 @@ function auth_aclcheck($id, $user, $groups)
  * @author  Andreas Gohr <andi@splitbrain.org>
  *
  * @param  array $data event data
- * @return int   permission level
+ * @return float permission level
  */
 function auth_aclcheck_cb($data)
 {
