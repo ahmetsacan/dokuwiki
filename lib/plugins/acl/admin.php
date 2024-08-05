@@ -121,7 +121,7 @@ class admin_plugin_acl extends AdminPlugin
             if ($cmd == 'save' && $scope && $this->who && $INPUT->has('acl')) {
                 // handle additions or single modifications
                 $this->deleteACL($scope, $this->who);
-                $this->addOrUpdateACL($scope, $this->who, $INPUT->int('acl'));
+                $this->addOrUpdateACL($scope, $this->who, $INPUT->float('acl'));
             } elseif ($cmd == 'del' && $scope && $this->who) {
                 // handle single deletions
                 $this->deleteACL($scope, $this->who);
@@ -776,6 +776,7 @@ class admin_plugin_acl extends AdminPlugin
 
         static $label = 0; //number labels
         $ret = '';
+        $AUTH_NAMES=[AUTH_NONE=>'none',AUTH_READ=>'read',(string)AUTH_EXPOSE=>'expose',(string)AUTH_HISTORY=>'history',(string)AUTH_SOURCE=>'source',AUTH_EDIT=>'edit',AUTH_CREATE=>'create',AUTH_UPLOAD=>'upload',AUTH_DELETE=>'delete',AUTH_ADMIN=>'admin'];
 
         if ($ispage && $setperm > AUTH_EDIT) $setperm = AUTH_EDIT;
 
@@ -801,7 +802,7 @@ class admin_plugin_acl extends AdminPlugin
             //build code
             $ret .= '<label for="pbox' . $label . '"' . $class . '>';
             $ret .= '<input ' . buildAttributes($atts) . ' />&#160;';
-            $ret .= $this->getLang('acl_perm' . $perm);
+            $ret .= $this->getLang('acl_perm' . $perm)?:($this->getLang('acl_perm_' . $AUTH_NAMES["$perm"])?:$AUTH_NAMES["$perm"]);
             $ret .= '</label>';
         }
         return $ret;

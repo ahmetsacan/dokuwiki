@@ -66,6 +66,14 @@ function search(&$data, $base, $func, $opts, $dir = '', $lvl = 1, $sort = 'natur
             search($data, $base, $func, $opts, $dir, $lvl + 1, $sort);
         }
     }
+    // some non-readable directories may be traversed for discovering readable subitems, but marked for removal.
+    if(empty($opts['sneakyacl'])){
+        foreach ($data as $key => $item) {
+            if ($item['remove']) {
+                unset($data[$key]);
+            }
+        }
+    }
     //now handle the files
     foreach ($files as $file) {
         call_user_func_array($func, [&$data, $base, $file, 'f', $lvl, $opts]);
@@ -485,7 +493,7 @@ function pathID($path, $keeptxt = false)
  * recmatch   string  match directory against this regexp when recursing     (default: '', so accept everything)
  * showmsg    bool    warn about non-ID files                                (default: false)
  * showhidden bool    show hidden files(e.g. by hidepages config) too        (default: false)
- * firsthead  bool    return first heading for pages                         (default: false)
+     * firsthead  bool    return first heading for pages                         (default: false)
  *
  * @param array &$data  - Reference to the result data structure
  * @param string $base  - Base usually $conf['datadir']
@@ -544,12 +552,18 @@ function search_universal(&$data, $base, $file, $type, $lvl, $opts)
     } else {
         $item['perm'] = AUTH_DELETE;
     }
-
+    
     // are we done here maybe?
     if ($type == 'd') {
         if (empty($opts['listdirs'])) return $return;
-        //neither list nor recurse forbidden items:
-        if (empty($opts['skipacl']) && !empty($opts['sneakyacl']) && $item['perm'] < AUTH_EXPOSE) return false;
+        if (empty($opts['skipacl']) && $item['perm'] < AUTH_EXPOSE){
+            //recurse into non-readable dirs (some of the subfolder or subfiles may be readable), but mark the dirname to be removed later.
+            if (empty($opts['sneakyacl'])){
+                $item['remove']=true;
+            }
+            //neither list nor recurse forbidden items:
+            else return false;
+        }
         if (!empty($opts['dirmatch']) && !preg_match('/' . $opts['dirmatch'] . '/', $file)) return $return;
         if (!empty($opts['nsmatch']) && !preg_match('/' . $opts['nsmatch'] . '/', $item['ns'])) return $return;
     } else {

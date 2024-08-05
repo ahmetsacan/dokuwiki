@@ -171,6 +171,25 @@ class Input
     }
 
     /**
+     * Access a request parameter a float
+     *
+     * @param string $name Parameter name
+     * @param float $default Default to return if parameter isn't set or is an array
+     * @param bool $nonempty Return $default if parameter is set but empty()
+     * @return float
+     */
+    public function float($name, $default = 0, $nonempty = false)
+    {
+        if (!isset($this->access[$name])) return $default;
+        if (is_array($this->access[$name])) return $default;
+        $value = $this->applyfilter($this->access[$name]);
+        if ($value === '') return $default;
+        if ($nonempty && empty($value)) return $default;
+
+        return (float)$value;
+    }
+
+    /**
      * Access a request parameter as string
      *
      * @param string $name Parameter name
