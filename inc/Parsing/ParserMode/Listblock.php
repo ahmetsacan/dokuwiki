@@ -28,15 +28,15 @@ class Listblock extends AbstractMode
             $this->Lexer->addEntryPattern('[ \t]*\n *[\-\*](?![\-\*])', $mode, 'listblock');
             $this->Lexer->addEntryPattern('[ \t]*\n\t*[\-\*](?![\-\*])', $mode, 'listblock');
     
-            $this->Lexer->addPattern('\n *[\-\*]', 'listblock');
-            $this->Lexer->addPattern('\n\t*[\-\*]', 'listblock');
+            $this->Lexer->addPattern('\n *[\-\*](?![\-\*])', 'listblock');
+            $this->Lexer->addPattern('\n\t*[\-\*](?![\-\*])', 'listblock');
             return;
         }
-        $this->Lexer->addEntryPattern('[ \t]*\n {2,}[\-\*]', $mode, 'listblock');
-        $this->Lexer->addEntryPattern('[ \t]*\n\t{1,}[\-\*]', $mode, 'listblock');
+        $this->Lexer->addEntryPattern('[ \t]*\n {2,}[\-\*](?![\-\*])', $mode, 'listblock');
+        $this->Lexer->addEntryPattern('[ \t]*\n\t{1,}[\-\*](?![\-\*])', $mode, 'listblock');
 
-        $this->Lexer->addPattern('\n {2,}[\-\*]', 'listblock');
-        $this->Lexer->addPattern('\n\t{1,}[\-\*]', 'listblock');
+        $this->Lexer->addPattern('\n {2,}[\-\*](?![\-\*])', 'listblock');
+        $this->Lexer->addPattern('\n\t{1,}[\-\*](?![\-\*])', 'listblock');
     }
 
     /** @inheritdoc */
