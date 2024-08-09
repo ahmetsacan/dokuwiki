@@ -22,6 +22,16 @@ class Listblock extends AbstractMode
     /** @inheritdoc */
     public function connectTo($mode)
     {
+        //ahmet: allow lists without spaces at the beginning (I'm too lazy to write a whole plugin for this simple change).
+        global $conf;
+        if($conf['spacelesslists']){
+            $this->Lexer->addEntryPattern('[ \t]*\n *[\-\*](?![\-\*])', $mode, 'listblock');
+            $this->Lexer->addEntryPattern('[ \t]*\n\t*[\-\*](?![\-\*])', $mode, 'listblock');
+    
+            $this->Lexer->addPattern('\n *[\-\*]', 'listblock');
+            $this->Lexer->addPattern('\n\t*[\-\*]', 'listblock');
+            return;
+        }
         $this->Lexer->addEntryPattern('[ \t]*\n {2,}[\-\*]', $mode, 'listblock');
         $this->Lexer->addEntryPattern('[ \t]*\n\t{1,}[\-\*]', $mode, 'listblock');
 

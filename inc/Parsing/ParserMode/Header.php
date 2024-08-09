@@ -13,6 +13,16 @@ class Header extends AbstractMode
             $mode,
             'header'
         );
+
+        //ahmet: allow lists without spaces at the beginning (I'm too lazy to write a whole plugin for this simple change).
+        global $conf;
+        if($conf['onesidedheaders']){
+            $this->Lexer->addSpecialPattern(
+                '[ \t]*={2,}[^\n]+',
+                $mode,
+                'header'
+            );
+            }
     }
 
     /** @inheritdoc */
