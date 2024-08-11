@@ -149,6 +149,12 @@ class StyleUtils
                 msg("Stylesheet $file not found, please contact the developer of \"$this->tpl\" template.", 2);
             }
         }
+        if(strpos($file,'/')!==false){
+             if(!str_ends_with($webbase,'/')) $webbase .= '/';
+             if(str_starts_with($file,'./')) $file = substr($file,2);
+             $webbase .= dirname($file);
+             if(!str_ends_with($webbase,'/')) $webbase .= '/';
+        }
         $stylesheets[$mode][fullpath($incbase . $file)] = $webbase;
         return $stylesheets;
     }
