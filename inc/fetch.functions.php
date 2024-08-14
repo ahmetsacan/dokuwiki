@@ -173,8 +173,9 @@ function checkFileStatus(&$media, &$file, $rev = '', $width = 0, $height = 0)
             return [412, 'Precondition Failed'];
         }
 
-        //check permissions (namespace only)
-        if (auth_quickaclcheck(getNS($media) . ':X') < AUTH_READ) {
+        //check permissions (namespace only) --> ahmet: why is this checking namespace only?? we want to be able to use acl for media files too. I changed it to check for the media file itself.
+        #if (auth_quickaclcheck(getNS($media) . ':X') < AUTH_READ) {
+        if (auth_quickaclcheck($media) < AUTH_READ) {
             return [403, 'Forbidden'];
         }
         $file = mediaFN($media, $rev);
