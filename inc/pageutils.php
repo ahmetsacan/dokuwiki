@@ -346,6 +346,20 @@ function wikiFN($raw_id, $rev = '', $clean = true)
     }
 
     if (empty($rev)) {
+        #ahmet: support for datadiralias (mapping certain namespaces to their own datadirs).
+        #$conf['datadiralias'] needs to be set in conf/local.protected.php
+        # Alias needs to use '/' (not a colon) as the separator since at this point the $id has slashes.
+        # Alias should not start or end with /.
+        #e.g,. use: $conf['datadiralias]['my/name/space']='C:/path/to/some/datadir';
+        #You must order datadiraliases from more specific to more general so the more specific one is checked first.
+        if (isset($conf['datadiralias'])) {
+            foreach ($conf['datadiralias'] as $alias => $aliasdir) {
+                if (strpos($id, $alias . '/') === 0) {
+                    $fn = $aliasdir . '/' . utf8_encodeFN(substr($id,strlen($alias)+1)) . '.txt';
+                    return $fn;
+                }
+            }
+        }
         $fn = $conf['datadir'] . '/' . utf8_encodeFN($id) . '.txt';
     } else {
         $fn = $conf['olddir'] . '/' . utf8_encodeFN($id) . '.' . $rev . '.txt';
@@ -459,6 +473,15 @@ function mediaFN($id, $rev = '', $clean = true)
     if ($clean) $id = cleanID($id);
     $id = str_replace(':', '/', $id);
     if (empty($rev)) {
+        #ahmet: support for mediadiralias (mapping certain namespaces to their own mediadirs). See comments in wikiFN().
+        if (isset($conf['mediadiralias'])) {
+            foreach ($conf['mediadiralias'] as $alias => $aliasdir) {
+                if (strpos($id, $alias . '/') === 0) {
+                    $fn = $aliasdir . '/' . utf8_encodeFN(substr($id,strlen($alias)+1));
+                    return $fn;
+                }
+            }
+        }        
         $fn = $conf['mediadir'] . '/' . utf8_encodeFN($id);
     } else {
         $ext = mimetype($id);
