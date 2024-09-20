@@ -662,6 +662,8 @@ function _isHiddenPage(&$data)
     global $ACT;
 
     if ($data['hidden']) return;
+    #also use the new AUTH_EXPOSE permission to check if the page is considered hidden
+    if(auth_quickaclcheck($data['id'])< AUTH_EXPOSE){ $data['hidden'] = true; return; }
     if (empty($conf['hidepages'])) return;
     if ($ACT == 'admin') return;
 
