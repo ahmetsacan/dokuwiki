@@ -52,8 +52,9 @@ abstract class Resolver
     {
         if ($id === '') return $id;
 
-        #ahmet: always consider $ids to be relative, unless they start with a colon.
-        if($id[0] !== ':' && $id[0] !== '.' && $id[0] !== '~') $id='.:'.$id;
+        #ahmet: provide $conf'igurable option to consider $ids to be relative, unless they start with a colon.
+        global $conf
+        if (($conf['resolve_alwaysrelative']??0) && $id[0] !== ':' && $id[0] !== '.' && $id[0] !== '~') $id = '.:' . $id;
 
         // relative to current page (makes the current page a start page)
         if ($id[0] === '~') {

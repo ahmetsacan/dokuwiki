@@ -10,9 +10,9 @@
  */
 define('AUTH_NONE', 0);
 define('AUTH_READ', 1);
-define('AUTH_EXPOSE',1.1);
-define('AUTH_HISTORY',1.2);
-define('AUTH_SOURCE',1.3);
+define('AUTH_EXPOSE', 1.1);
+define('AUTH_HISTORY', 1.2);
+define('AUTH_SOURCE', 1.3);
 define('AUTH_EDIT', 2);
 define('AUTH_CREATE', 4);
 define('AUTH_UPLOAD', 8);
