@@ -85,11 +85,19 @@ class Clean
      * @param  string $additional Additional chars to strip (used in regexp char class)
      * @return string
      */
-    public static function stripspecials($string, $repl = '', $additional = '')
+    #ahmet: allow the ability to keep certain files (e.g., we may want to keep space characters in media file names.).
+    #pageUtils.php: cleanID() now uses $conf['cleanid_keepchars'] to allow user-configured characters.
+    public static function stripspecials($string, $repl = '', $additional = '', $keepchars = '')
     {
         static $specials = null;
         if ($specials === null) {
             $specials = preg_quote(Table::specialChars(), '/');
+        }
+        if($keepchars){
+            #need to use the un-preg_quoted version of $specials to exclude $keepchars:
+            $specials2=preg_replace('/['.preg_quote($keepchars,'/').']/u','',Table::specialChars());
+            $specials2=preg_quote($specials2,'/');
+            return preg_replace('/[' . $additional . '\x00-\x19' . $specials2 . ']/u', $repl, $string);
         }
 
         return preg_replace('/[' . $additional . '\x00-\x19' . $specials . ']/u', $repl, $string);

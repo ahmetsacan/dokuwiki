@@ -46,6 +46,7 @@ if ($EXT === false) {
 // prepare data for plugin events
 $data = [
     'media' => $MEDIA,
+    'rev' => $REV, #ahmet: added rev.
     'file' => $FILE,
     'orig' => $FILE,
     'mime' => $MIME,

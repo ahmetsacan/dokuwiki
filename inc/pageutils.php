@@ -139,7 +139,9 @@ function cleanID($raw_id, $ascii = false)
         $sepcharpat = '#\\' . $sepchar . '+#';
 
     $id = trim((string)$raw_id);
-    $id = PhpString::strtolower($id);
+    #ahmet: provide option to not do strtolower()
+    #$id = PhpString::strtolower($id);
+    if(!($conf['cleanid_nolower']??false)) $id = PhpString::strtolower($id);
 
     //alternative namespace seperator
     if ($conf['useslash']) {
@@ -152,7 +154,8 @@ function cleanID($raw_id, $ascii = false)
     if ($conf['deaccent'] || $ascii) $id = Clean::deaccent($id, -1);
 
     //remove specials
-    $id = Clean::stripspecials($id, $sepchar, '\*');
+    #ahmet: extended Clean::stripspecials to allow for keeping certain characters specified in $conf['cleanid_keepchars'] (I personally like allowing the space character in media file names).
+    $id = Clean::stripspecials($id, $sepchar, '\*',$conf['cleanid_keepchars']??'');
 
     if ($ascii) $id = Clean::strip($id);
 
@@ -474,15 +477,22 @@ function mediaFN($id, $rev = '', $clean = true)
     $id = str_replace(':', '/', $id);
     if (empty($rev)) {
         #ahmet: support for mediadiralias (mapping certain namespaces to their own mediadirs). See comments in wikiFN().
+        $fn=null;
         if (isset($conf['mediadiralias'])) {
             foreach ($conf['mediadiralias'] as $alias => $aliasdir) {
                 if (strpos($id, $alias . '/') === 0) {
                     $fn = $aliasdir . '/' . utf8_encodeFN(substr($id,strlen($alias)+1));
-                    return $fn;
+                    break;
                 }
             }
         }        
-        $fn = $conf['mediadir'] . '/' . utf8_encodeFN($id);
+        if(!isset($fn)) $fn = $conf['mediadir'] . '/' . utf8_encodeFN($id);
+        #ahmet: trigger an event so that plugins can modify the media file path. usemediaevent must be turned on in conf/local.protected.php for this to work.
+        if(isset($conf['usemediafnevent'])&&$conf['usemediafnevent']){
+            $data = ['media' => str_replace('/',':',$id), 'file' => &$fn];
+            Event::createAndTrigger('MEDIAFN', $data);
+        }
+        return $fn;
     } else {
         $ext = mimetype($id);
         $name = substr($id, 0, -1 * strlen($ext[0]) - 1);
@@ -729,7 +739,8 @@ function utf8_encodeFN($file, $safe = true)
     global $conf;
     if ($conf['fnencode'] == 'utf-8') return $file;
 
-    if ($safe && preg_match('#^[a-zA-Z0-9/_\-\.%]+$#', $file)) {
+    #ahmet: also consider space character as safe
+    if ($safe && preg_match('#^[a-zA-Z0-9/_\-\.% ]+$#', $file)) {
         return $file;
     }
 
