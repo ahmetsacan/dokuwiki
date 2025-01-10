@@ -52,6 +52,9 @@ abstract class Resolver
     {
         if ($id === '') return $id;
 
+        #ahmet: always consider $ids to be relative, unless they start with a colon.
+        if($id[0] !== ':' && $id[0] !== '.' && $id[0] !== '~') $id='.:'.$id;
+
         // relative to current page (makes the current page a start page)
         if ($id[0] === '~') {
             $id = $this->contextID . ':' . substr($id, 1);
