@@ -548,6 +548,9 @@ function resolve_id($ns, $id, $clean = true)
     // some pre cleaning for useslash:
     if ($conf['useslash']) $id = str_replace('/', ':', $id);
 
+    #ahmet: provide $conf'igurable option to consider $ids to be relative, unless they start with a colon.
+    if (($conf['resolve_alwaysrelative']??0) && $id[0] !== ':' && $id[0] !== '.' && $id[0] !== '~') $id = '.:' . $id;
+
     // if the id starts with a dot we need to handle the
     // relative stuff
     if ($id && $id[0] == '.') {
