@@ -175,7 +175,7 @@ class ApiCoreTest extends \DokuWikiTest
                 'permission' => 8,
                 'size' => filesize($file1),
                 'revision' => filemtime($file1),
-                'hash' => md5(io_readFile($file1)),
+                'hash' => md5(trim(io_readFile($file1))),
                 'author' => '',
             ],
             [
@@ -184,7 +184,7 @@ class ApiCoreTest extends \DokuWikiTest
                 'permission' => 8,
                 'size' => filesize($file2),
                 'revision' => filemtime($file2),
-                'hash' => md5(io_readFile($file2)),
+                'hash' => md5(trim(io_readFile($file2))),
                 'author' => '',
             ]
         ];
@@ -438,7 +438,7 @@ You can use up to five different levels of',
             'id' => $id,
             'revision' => $rev2,
             'author' => 'testuser',
-            'hash' => md5(io_readFile($file)),
+            'hash' => md5(trim(io_readFile($file))),
             'title' => $id,
             'size' => filesize($file),
             'permission' => 8,
@@ -674,7 +674,7 @@ You can use up to five different levels of',
             'text' => '',
         ];
         $this->assertTrue($this->remote->call('core.savePage', $params));
-        $this->assertFileNotExists(wikiFN($id));
+        $this->assertFileDoesNotExist(wikiFN($id));
 
         // remove non existing page (reusing above params)
         $e = null;
@@ -901,7 +901,7 @@ You can use up to five different levels of',
 
         // deletion should work now
         $this->assertTrue($this->remote->call('core.deleteMedia', ['media' => $id]));
-        $this->assertFileNotExists($file);
+        $this->assertFileDoesNotExist($file);
 
         clearstatcache(false, $file);
 
