@@ -3,7 +3,6 @@
 /**
  * Initialize some defaults needed for DokuWiki
  */
-
 use dokuwiki\Extension\PluginController;
 use dokuwiki\ErrorHandler;
 use dokuwiki\Input\Input;
@@ -660,4 +659,9 @@ function fullpath($path, $exists = false)
         return false;
     }
     return $finalpath;
+}
+
+if(($ahmetlibphp=getenv('AHMETLIBPHP'))){
+    require_once "$ahmetlibphp/ahmet.php"; dbg::$ve_showtrace=1;
+    function mve(){ msg(call_user_func_array('ve_',func_get_args())); }
 }
